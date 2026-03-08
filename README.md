@@ -59,6 +59,36 @@ npm start
 
 Service runs by default at `http://localhost:3000`.
 
+## Deploy On Render
+
+Create a **Web Service** from this repository.
+
+- Runtime: `Node`
+- Build command: `npm install`
+- Start command: `npm start`
+- Health check path: `/health`
+
+Create a **PostgreSQL** service on Render and connect it to this app.
+
+Set these environment variables in the Web Service:
+
+- `NODE_ENV=production`
+- `DATABASE_URL=<your render postgres url>`
+- `PG_SSL=auto`
+
+Notes:
+
+- If you use Render Postgres **Internal Database URL**, SSL is usually not required.
+- If you use Render Postgres **External Database URL**, SSL is usually required.
+- `PG_SSL=auto` detects this from `DATABASE_URL` when it contains `sslmode=require`.
+
+If deployment fails, check Render logs for one of these common causes:
+
+- `DATABASE_URL is required.`: environment variable is missing.
+- `no pg_hba.conf entry ... SSL off`: set `PG_SSL=true` or use URL with `sslmode=require`.
+- `connect ECONNREFUSED`: wrong host/port in `DATABASE_URL` or DB not accessible.
+- `password authentication failed`: invalid username/password in `DATABASE_URL`.
+
 ## Endpoints
 
 ### GET `/health`
